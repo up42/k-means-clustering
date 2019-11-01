@@ -1,0 +1,14 @@
+*.egg-info/
+*.pyc
+*.pyo
+__pycache__
+.idea/
+.DS_Store
+.mypy_cache/
+.pytest_cache/
+.coverage
+.vscode
+**/scratch
+marketplace*.json
+*.html
+.ropeproject
