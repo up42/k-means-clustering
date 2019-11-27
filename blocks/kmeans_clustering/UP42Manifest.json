@@ -30,7 +30,7 @@
         }
     },
     "machine": {
-	    "type": "large"
+	    "type": "xlarge"
     },
     "input_capabilities": {
         "up42.data.aoiclipped": {}
