@@ -11,10 +11,8 @@ install:
 	pip install -r $(SRC)/requirements.txt
 
 test:
+	black .
 	python -m pytest --pylint --pylint-rcfile=../../pylintrc --mypy --mypy-ignore-missing-imports --cov=$(SRC)/src/
-
-test[live]:
-	python -m pytest --pylint --pylint-rcfile=../../pylintrc --mypy --mypy-ignore-missing-imports --cov=$(SRC)/src/ --runlive
 
 clean:
 	find . -name "__pycache__" -exec rm -rf {} +
