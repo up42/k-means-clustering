@@ -7,7 +7,7 @@ from typing import Any, Union
 from geojson import Feature, FeatureCollection
 
 AOICLIPPED = "up42.data.aoiclipped"
-LOG_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 
 
 def get_logger(name, level=logging.DEBUG):
@@ -43,8 +43,8 @@ def ensure_data_directories_exist():
     """
     This method checks input and output directories for data flow
     """
-    pathlib.Path('/tmp/input/').mkdir(parents=True, exist_ok=True)
-    pathlib.Path('/tmp/output/').mkdir(parents=True, exist_ok=True)
+    pathlib.Path("/tmp/input/").mkdir(parents=True, exist_ok=True)
+    pathlib.Path("/tmp/output/").mkdir(parents=True, exist_ok=True)
 
 
 def save_metadata(result: FeatureCollection):
@@ -96,7 +96,7 @@ def load_params() -> dict:
     the task parameters are not set, falls back to the old INTERSTELLAR_JOB_INPUTS.
     """
     helper_logger = get_logger(__name__)
-    data = os.environ.get("UP42_TASK_PARAMETERS", '{}')
+    data = os.environ.get("UP42_TASK_PARAMETERS", "{}")
     helper_logger.debug("Fetching parameters for this blocks: %s", data)
     if data == "":
         data = "{}"
