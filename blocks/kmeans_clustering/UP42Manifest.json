@@ -35,9 +35,8 @@
     "input_capabilities": {
         "raster": {
             "up42_standard": {
-                "format": "GTiff"
-
-        },
+                "format": "GTiff",
+            }
         }
     },
     "output_capabilities": {
