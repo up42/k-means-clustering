@@ -1,5 +1,5 @@
 {
-    "_up42_specification_version": 1,
+    "_up42_specification_version": 2,
     "name": "kmeans-clustering",
     "type": "processing",
     "tags": [
@@ -33,9 +33,20 @@
 	    "type": "xlarge"
     },
     "input_capabilities": {
-        "up42.data.aoiclipped": {}
+        "raster": {
+            "up42_standard": {
+                "format": "GTiff"
+
+        },
+        }
     },
     "output_capabilities": {
-        "up42.data.aoiclipped": {}
+        "raster": {
+            "up42_standard": {
+                "format": "GTiff"
+        "resolution":">",
+        "dtype":"uint8"
+      }
     }
+  }
 }
