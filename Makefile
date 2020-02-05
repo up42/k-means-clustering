@@ -13,6 +13,8 @@ install:
 test:
 	black .
 	python -m pytest --pylint --pylint-rcfile=../../pylintrc --mypy --mypy-ignore-missing-imports --cov=$(SRC)/src/
+	RET_VALUE=$?
+	exit $(RET_VALUE)
 
 clean:
 	find . -name "__pycache__" -exec rm -rf {} +
