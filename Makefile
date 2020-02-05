@@ -1,7 +1,7 @@
 ## Configuration for Makefile.
-SRC := blocks/kmeans_clustering
+SRC := .
 UP42_DOCKERFILE := Dockerfile
-UP42_MANIFEST := $(SRC)/UP42Manifest.json
+UP42_MANIFEST := UP42Manifest.json
 DOCKER_TAG := kmeans-clustering
 DOCKER_VERSION := latest
 VALIDATE_ENDPOINT := https://api.up42.com/validate-schema/block
@@ -21,13 +21,13 @@ clean:
 	find . -name ".coverage" -exec rm -f {} +
 
 validate:
-	cd $(SRC);	curl -X POST -H 'Content-Type: application/json' -d @UP42Manifest.json $(VALIDATE_ENDPOINT)
+	curl -X POST -H 'Content-Type: application/json' -d @UP42Manifest.json $(VALIDATE_ENDPOINT)
 
 build:
 ifdef UID
-	cd $(SRC); docker build --build-arg manifest='$(shell cat ${UP42_MANIFEST})' -f $(UP42_DOCKERFILE) -t $(REGISTRY)/$(UID)/$(DOCKER_TAG):$(DOCKER_VERSION) .
+	docker build --build-arg manifest='$(shell cat ${UP42_MANIFEST})' -f $(UP42_DOCKERFILE) -t $(REGISTRY)/$(UID)/$(DOCKER_TAG):$(DOCKER_VERSION) .
 else
-	cd $(SRC); docker build --build-arg manifest='$(shell cat ${UP42_MANIFEST})'  -f $(UP42_DOCKERFILE) -t $(DOCKER_TAG) .
+	docker build --build-arg manifest='$(shell cat ${UP42_MANIFEST})'  -f $(UP42_DOCKERFILE) -t $(DOCKER_TAG) .
 endif
 
 push:
