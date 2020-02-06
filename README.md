@@ -1,4 +1,5 @@
 # K-Means Clustering processing block
+![coverage](coverage.svg)
 ## Introduction
 
 This is a simple instructional [unsupervised classification](https://en.wikipedia.org/wiki/Cluster_analysis)
