@@ -9,6 +9,5 @@ __pycache__
 .coverage
 .vscode
 **/scratch
-marketplace*.json
 *.html
 .ropeproject
