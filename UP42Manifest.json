@@ -1,41 +1,51 @@
 {
-    "_up42_specification_version": 1,
-    "name": "kmeans-clustering",
-    "type": "processing",
-    "tags": [
-        "imagery",
-        "processing",
-        "machine learning"
-    ],
-    "display_name": "K-means Clustering",
-    "description": "This block takes an AOI clipped image and runs a simple classification procedure.\nThe classification is a simple unsupervised K-means clustering in the color space of the image.\nThe number of clusters and other parameters can be specified for the classification.",
-    "parameters": {
-        "n_clusters": {
-            "type": "number",
-            "required": false,
-            "description": "The number of clusters for the K-means clustering",
-            "default": 6
-        },
-        "n_iterations": {
-            "type": "number",
-            "required": false,
-            "description": "The number of iterations for the K-means clustering",
-            "default": 10
-        },
-        "n_sieve_pixels": {
-            "type": "number",
-            "required": false,
-            "description": "Minimum number of pixels in each patch for the classification",
-            "default": 64
-        }
+  "_up42_specification_version": 2,
+  "name": "kmeans-clustering",
+  "type": "processing",
+  "tags": [
+    "imagery",
+    "processing",
+    "machine learning"
+  ],
+  "display_name": "K-means Clustering",
+  "description": "This block takes an AOI clipped image and runs a simple classification procedure.\nThe classification is a simple unsupervised K-means clustering in the color space of the image.\nThe number of clusters and other parameters can be specified for the classification.",
+  "parameters": {
+    "n_clusters": {
+      "type": "number",
+      "required": false,
+      "description": "The number of clusters for the K-means clustering",
+      "default": 6
     },
-    "machine": {
-	    "type": "xlarge"
+    "n_iterations": {
+      "type": "number",
+      "required": false,
+      "description": "The number of iterations for the K-means clustering",
+      "default": 10
     },
-    "input_capabilities": {
-        "up42.data.aoiclipped": {}
-    },
-    "output_capabilities": {
-        "up42.data.aoiclipped": {}
+    "n_sieve_pixels": {
+      "type": "number",
+      "required": false,
+      "description": "Minimum number of pixels in each patch for the classification",
+      "default": 64
     }
+  },
+  "machine": {
+    "type": "xlarge"
+  },
+  "input_capabilities": {
+    "raster": {
+      "up42_standard": {
+        "format": "GTiff"
+      }
+    }
+  },
+  "output_capabilities": {
+    "raster": {
+      "up42_standard": {
+        "format": "GTiff",
+        "resolution": ">",
+        "dtype": "uint8"
+      }
+    }
+  }
 }
