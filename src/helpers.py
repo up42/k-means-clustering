@@ -6,7 +6,6 @@ from typing import Any, Union
 
 from geojson import Feature, FeatureCollection
 
-AOICLIPPED = "up42.data.aoiclipped"
 LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 
 

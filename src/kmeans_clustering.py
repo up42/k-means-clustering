@@ -15,7 +15,6 @@ from helpers import (
     load_params,
     load_metadata,
     ensure_data_directories_exist,
-    AOICLIPPED,
 )
 
 logger = get_logger(__name__)
@@ -111,11 +110,11 @@ class KMeansClustering:
         results = []  # type: List[Feature]
         for feature in metadata.features:
 
-            path_to_input_img = feature["properties"][AOICLIPPED]
+            path_to_input_img = feature["properties"]["up42.data_path"]
             path_to_output_img = Path(path_to_input_img).stem + "_kmeans.tif"
 
             out_feature = feature.copy()
-            out_feature["properties"][AOICLIPPED] = path_to_output_img
+            out_feature["properties"]["up42.data_path"] = path_to_output_img
             results.append(out_feature)
 
             self.run_kmeans_clustering(
