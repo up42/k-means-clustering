@@ -132,7 +132,7 @@ Click on "`PUSH a BLOCK to THE PLATFORM`" and copy your USERID from the command 
 "`Push the image to the UP42 Docker registry`". The USERID will look similar to this:
 `63uayd50-z2h1-3461-38zq-1739481rjwia`
 
-Replace <User-ID> with your UP42 User-ID.
+Replace `<User-ID>` with your UP42 User-ID.
 ```bash
 docker build . -t registry.up42.com/<USER-ID>/k-means-clustering:1.0 --build-arg manifest="$(cat UP42Manifest.json)"
 
@@ -140,7 +140,7 @@ docker build . -t registry.up42.com/<USER-ID>/k-means-clustering:1.0 --build-arg
 docker build . -t registry.up42.com/6760d08e-54e3-4f1c-b22e-6ba605ec7592/k-means-clustering:1.0 --build-arg manifest="$(cat UP42Manifest.json)"
 ```
 
-Now you can finally push the image to the UP42 docker registry. Replace <User-ID> with your UP42 User-ID.
+Now you can finally push the image to the UP42 docker registry. Replace `<User-ID>` with your UP42 User-ID.
 
 ```bash
 docker push registry.up42.com/<USER-ID>/k-means-clustering:1.0
