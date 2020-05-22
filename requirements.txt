@@ -17,3 +17,4 @@ pytest-cov
 pytest-mypy
 black
 coverage-badge
+up42-blockutils
