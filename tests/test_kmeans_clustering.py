@@ -1,9 +1,9 @@
 import numpy as np
 import pytest
 
-from context import KMeansClustering
+from blockutils.common import ensure_data_directories_exist
 
-from kmeans_clustering import ensure_data_directories_exist
+from context import KMeansClustering
 
 
 @pytest.fixture(scope="session", autouse=True)
