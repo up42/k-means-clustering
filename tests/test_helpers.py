@@ -2,14 +2,14 @@ import os
 
 from geojson import Feature, Point
 
-from context import LOG_FORMAT, get_logger, set_capability, get_capability, load_params
-
+from context import LOG_FORMAT, set_capability, get_capability
+from kmeans_clustering import get_logger, load_params
 
 # pylint: disable=protected-access
 def test_get_logger():
     logger = get_logger("test_logger")
     assert (
-        logger.handlers[0].formatter._fmt == LOG_FORMAT
+        logger.handlers[0].formatter._fmt == LOG_FORMAT  # protected attribute
     ), "Incorrect logger or log formatter loaded!"
 
 

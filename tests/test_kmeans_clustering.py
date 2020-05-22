@@ -3,7 +3,7 @@ import pytest
 
 from context import KMeansClustering
 
-from context import ensure_data_directories_exist
+from kmeans_clustering import ensure_data_directories_exist
 
 
 @pytest.fixture(scope="session", autouse=True)
