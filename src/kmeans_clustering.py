@@ -95,8 +95,7 @@ class KMeansClustering(ProcessingBlock):
         with rio.open(output_file_path, "w", **dst_meta) as dst:
             dst.write(clusters_ar.astype(rio.uint8), 1)
 
-    # pylint: disable=arguments-differ
-    def process(self, metadata: FeatureCollection) -> FeatureCollection:
+    def process(self, input_fc: FeatureCollection) -> FeatureCollection:
         """
         Given the necessary parameters and a feature collection describing the input datasets,
         run K-means clustering for each input data set and create output feature collection
@@ -105,7 +104,7 @@ class KMeansClustering(ProcessingBlock):
         :return: A GeoJSON FeatureCollection describing all output datasets
         """
         results = []  # type: List[Feature]
-        for feature in metadata.features:
+        for feature in input_fc.features:
             path_to_input_img = feature["properties"]["up42.data_path"]
             path_to_output_img = Path(path_to_input_img).stem + "_kmeans.tif"
 
