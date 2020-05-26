@@ -25,7 +25,7 @@ if __name__ == "__main__":
 
     RUN_CMD = (
         """docker run -v %s:/tmp \
-                 -e 'UP42_TASK_PARAMETERS={"n_clusters":8}' \
+                 -e 'UP42_TASK_PARAMETERS={"n_clusters":8, "n_iterations": 10, "n_sieve_pixels": 64}' \
                   -it kmeans-clustering"""
         % TEST_DIR
     )
