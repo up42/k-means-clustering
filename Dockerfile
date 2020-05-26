@@ -2,7 +2,7 @@
 ### classification using clustering.
 
 # Use a standard python image as a base
-FROM up42/up42-base-py37:latest
+FROM up42/up42-blockutils-py37
 
 ARG BUILD_DIR=.
 
@@ -16,7 +16,7 @@ LABEL "up42_manifest"=$manifest
 WORKDIR /block
 COPY $BUILD_DIR/requirements.txt /block
 
-# Install trhe Python requirements.
+# Install the Python requirements.
 RUN pip install -r requirements.txt
 
 # Copy the code into the container.

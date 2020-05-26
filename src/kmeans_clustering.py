@@ -9,18 +9,13 @@ import rasterio as rio
 from rasterio import features
 from sklearn.cluster import KMeans
 
-from helpers import (
-    get_logger,
-    save_metadata,
-    load_params,
-    load_metadata,
-    ensure_data_directories_exist,
-)
+from blockutils.logging import get_logger
+from blockutils.blocks import ProcessingBlock
 
 logger = get_logger(__name__)
 
 
-class KMeansClustering:
+class KMeansClustering(ProcessingBlock):
     """
     This class implements a K-means clustering method
     """
@@ -34,6 +29,7 @@ class KMeansClustering:
         :param n_iter: Number of iterations for the K-means classification
         :param n_sieve_pixels: Minimum size (in pixels) of the cluster patches for the sieve-ing operation
         """
+        super().__init__()
         self.n_clusters = n_clusters
         self.n_iterations = n_iter
         self.n_sieve_pixels = n_sieve_pixels
@@ -99,7 +95,7 @@ class KMeansClustering:
         with rio.open(output_file_path, "w", **dst_meta) as dst:
             dst.write(clusters_ar.astype(rio.uint8), 1)
 
-    def process_feature(self, metadata: FeatureCollection) -> FeatureCollection:
+    def process(self, input_fc: FeatureCollection) -> FeatureCollection:
         """
         Given the necessary parameters and a feature collection describing the input datasets,
         run K-means clustering for each input data set and create output feature collection
@@ -108,8 +104,7 @@ class KMeansClustering:
         :return: A GeoJSON FeatureCollection describing all output datasets
         """
         results = []  # type: List[Feature]
-        for feature in metadata.features:
-
+        for feature in input_fc.features:
             path_to_input_img = feature["properties"]["up42.data_path"]
             path_to_output_img = Path(path_to_input_img).stem + "_kmeans.tif"
 
@@ -121,31 +116,3 @@ class KMeansClustering:
                 "/tmp/input/" + path_to_input_img, "/tmp/output/" + path_to_output_img
             )
         return FeatureCollection(results)
-
-    @classmethod
-    def from_dict(cls, params_dict):
-        """
-        This method reads the parameters of the processing block from a dictionary
-
-        :param params_dict: A dictionary containing the parameters of the classification operation
-        :return: An instance of the KMeansClustering class configured with the given parameters
-        """
-        n_clusters = params_dict.get("n_clusters", 4) or 4  # type: int
-        n_iterations = params_dict.get("n_iterations", 10) or 10  # type: int
-        n_sieve_pixels = params_dict.get("n_sieve_pixels", 64) or 64  # type: int
-        return KMeansClustering(
-            n_clusters=n_clusters, n_iter=n_iterations, n_sieve_pixels=n_sieve_pixels,
-        )
-
-    @staticmethod
-    def run():
-        """
-        This method is the main entry point for this processing block
-        """
-        # pylint: disable=E1121
-        ensure_data_directories_exist()
-        params = load_params()  # type: dict
-        input_metadata = load_metadata()  # type: FeatureCollection
-        lcc = KMeansClustering.from_dict(params)
-        result = lcc.process_feature(input_metadata)  # type: FeatureCollection
-        save_metadata(result)
