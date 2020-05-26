@@ -20,7 +20,9 @@ class KMeansClustering(ProcessingBlock):
     This class implements a K-means clustering method
     """
 
-    def __init__(self, n_clusters: int = 6, n_iterations: int = 10, n_sieve_pixels: int = 64):
+    def __init__(
+        self, n_clusters: int = 6, n_iterations: int = 10, n_sieve_pixels: int = 64
+    ):
         """
         It is possible to set all parameters for testing etc, but in a standard scenario
         these values would be read from env variables
