@@ -1,9 +1,13 @@
 import unittest.mock as mock
+from pathlib import Path
 
 import numpy as np
 import pytest
 
-from blockutils.common import ensure_data_directories_exist
+from geojson import FeatureCollection, Feature
+
+from blockutils.common import ensure_data_directories_exist, TestDirectoryContext
+from blockutils.syntheticimage import SyntheticImage
 from blockutils.exceptions import UP42Error
 
 from context import KMeansClustering, raise_if_too_large
@@ -30,6 +34,35 @@ def test_kmeans_clustering():
     assert len(np.unique(clusters_ar)) == 3
     assert np.min(clusters_ar) == 0
     assert np.max(clusters_ar) == 2
+
+
+def test_process():
+    lcc = KMeansClustering(n_clusters=5, n_iterations=5, n_sieve_pixels=1)
+    with TestDirectoryContext(Path("/tmp")) as temp:
+        image_path, _ = SyntheticImage(
+            100, 100, 4, "uint16", out_dir=temp / "input"
+        ).create(seed=100)
+        input_fc = FeatureCollection(
+            [
+                Feature(
+                    geometry={
+                        "type": "Polygon",
+                        "coordinates": [
+                            [
+                                [-8.89411926269531, 38.61687046392973],
+                                [-8.8604736328125, 38.61687046392973],
+                                [-8.8604736328125, 38.63939998171362],
+                                [-8.89411926269531, 38.63939998171362],
+                                [-8.89411926269531, 38.61687046392973],
+                            ]
+                        ],
+                    },
+                    properties={"up42.data_path": str(image_path.name)},
+                )
+            ]
+        )
+        output_fc = lcc.process(input_fc)
+        assert output_fc.features
 
 
 def test_raise_if_too_large():
