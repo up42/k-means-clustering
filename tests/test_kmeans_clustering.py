@@ -64,6 +64,9 @@ def test_process():
         output_fc = lcc.process(input_fc)
         assert output_fc.features
 
+        with pytest.raises(UP42Error, match=r".*[NO_INPUT_ERROR].*"):
+            lcc.process(FeatureCollection([]))
+
 
 def test_raise_if_too_large():
     with mock.patch("rasterio.DatasetReader") as src:
