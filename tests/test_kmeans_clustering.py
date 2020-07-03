@@ -53,3 +53,8 @@ def test_raise_if_too_large():
             instance.meta["dtype"] = "uint16"
             instance.shape = (500000, 500000, 4)
             raise_if_too_large(instance)
+
+        with pytest.raises(UP42Error, match=r".*[WRONG_INPUT_ERROR].*"):
+            instance.meta["dtype"] = "uint8"
+            instance.shape = (10, 10, 4)
+            raise_if_too_large(instance, 1)
