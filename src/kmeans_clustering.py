@@ -28,9 +28,7 @@ def raise_if_too_large(input_ds: rio.DatasetReader, max_size_bytes: int = 214748
     else:
         multiplier = 2
 
-    expected_size = (
-        input_ds.shape[0] * input_ds.shape[1] * input_ds.shape[2] * multiplier
-    )
+    expected_size = input_ds.shape[0] * input_ds.shape[1] * input_ds.count * multiplier
 
     if expected_size > max_size_bytes:
         raise UP42Error(

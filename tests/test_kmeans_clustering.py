@@ -69,25 +69,30 @@ def test_raise_if_too_large():
     with mock.patch("rasterio.DatasetReader") as src:
         instance = src.return_value
         instance.meta["dtype"] = "uint8"
-        instance.shape = (10, 10, 4)
+        instance.count = 4
+        instance.shape = (10, 10)
         raise_if_too_large(instance)
 
         with pytest.raises(UP42Error, match=r".*[WRONG_INPUT_ERROR].*"):
             instance.meta["dtype"] = "float"
-            instance.shape = (500000, 500000, 4)
+            instance.count = 4
+            instance.shape = (500000, 500000)
             raise_if_too_large(instance)
 
         with pytest.raises(UP42Error, match=r".*[WRONG_INPUT_ERROR].*"):
             instance.meta["dtype"] = "uint8"
-            instance.shape = (500000, 500000, 4)
+            instance.count = 4
+            instance.shape = (500000, 500000)
             raise_if_too_large(instance)
 
         with pytest.raises(UP42Error, match=r".*[WRONG_INPUT_ERROR].*"):
             instance.meta["dtype"] = "uint16"
-            instance.shape = (500000, 500000, 4)
+            instance.count = 4
+            instance.shape = (500000, 500000)
             raise_if_too_large(instance)
 
         with pytest.raises(UP42Error, match=r".*[WRONG_INPUT_ERROR].*"):
             instance.meta["dtype"] = "uint8"
-            instance.shape = (10, 10, 4)
+            instance.count = 4
+            instance.shape = (10, 10)
             raise_if_too_large(instance, 1)
