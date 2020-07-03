@@ -130,6 +130,9 @@ class KMeansClustering(ProcessingBlock):
         :param metadata: A GeoJSON FeatureCollection describing all input datasets
         :return: A GeoJSON FeatureCollection describing all output datasets
         """
+        if not input_fc.features:
+            raise UP42Error(SupportedErrors.NO_INPUT_ERROR)
+
         results = []  # type: List[Feature]
         for feature in input_fc.features:
             path_to_input_img = feature["properties"]["up42.data_path"]
@@ -139,7 +142,17 @@ class KMeansClustering(ProcessingBlock):
             out_feature["properties"]["up42.data_path"] = path_to_output_img
             results.append(out_feature)
 
-            self.run_kmeans_clustering(
-                "/tmp/input/" + path_to_input_img, "/tmp/output/" + path_to_output_img
-            )
+            try:
+                self.run_kmeans_clustering(
+                    "/tmp/input/" + path_to_input_img,
+                    "/tmp/output/" + path_to_output_img,
+                )
+            except UP42Error as e:
+                logger.warning(e)
+                logger.warning(
+                    "%s is too large to process, skipping...", path_to_input_img
+                )
+
+        if not results:
+            raise UP42Error(SupportedErrors.NO_OUTPUT_ERROR)
         return FeatureCollection(results)
