@@ -16,8 +16,9 @@ from blockutils.exceptions import UP42Error, SupportedErrors
 logger = get_logger(__name__)
 
 
-def raise_if_too_large(input_ds: rio.DatasetReader, max_size_bytes: int = 21474825484):
-    # xlarge image has 20GB RAM
+def raise_if_too_large(input_ds: rio.DatasetReader, max_size_bytes: int = 2415919104):
+    # xlarge image has 20GB
+    # Using 18 GB as max in memory for safety as default - 2415919104 bytes
 
     if input_ds.meta["dtype"] == "uint8":
         multiplier = 1.4
