@@ -11,8 +11,32 @@ from sklearn.cluster import KMeans
 
 from blockutils.logging import get_logger
 from blockutils.blocks import ProcessingBlock
+from blockutils.exceptions import UP42Error, SupportedErrors
 
 logger = get_logger(__name__)
+
+
+def raise_if_too_large(input_ds: rio.DatasetReader, max_size_bytes: int = 21474825484):
+    # xlarge image has 20GB RAM
+
+    if input_ds.meta["dtype"] == "uint8":
+        multiplier = 1.4
+    elif input_ds.meta["dtype"] == "uint16":
+        multiplier = 2
+    elif input_ds.meta["dtype"] == "float":
+        multiplier = 4
+    else:
+        multiplier = 2
+
+    expected_size = (
+        input_ds.shape[0] * input_ds.shape[1] * input_ds.shape[2] * multiplier
+    )
+
+    if expected_size > max_size_bytes:
+        raise UP42Error(
+            SupportedErrors.WRONG_INPUT_ERROR,
+            "Dataset is too large! Please select a smaller AOI.",
+        )
 
 
 class KMeansClustering(ProcessingBlock):
@@ -77,6 +101,7 @@ class KMeansClustering(ProcessingBlock):
 
         # Read data from the geo tif file
         with rio.open(input_file_path, "r") as src:
+            raise_if_too_large(src)
             img_band_cnt = src.meta["count"]
             img_bands = []
             for i in range(img_band_cnt):
