@@ -139,13 +139,13 @@ class KMeansClustering(ProcessingBlock):
 
             out_feature = feature.copy()
             out_feature["properties"]["up42.data_path"] = path_to_output_img
-            results.append(out_feature)
 
             try:
                 self.run_kmeans_clustering(
                     "/tmp/input/" + path_to_input_img,
                     "/tmp/output/" + path_to_output_img,
                 )
+                results.append(out_feature)
             except UP42Error as e:
                 logger.warning(e)
                 logger.warning(
