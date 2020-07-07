@@ -8,8 +8,13 @@ disable=
     too-few-public-methods,
     missing-final-newline,
     too-many-boolean-expressions,
+    unsubscriptable-object,
+    no-member,
+    fixme,
     bad-continuation,
-    fixme
+    duplicate-code,
+    logging-fstring-interpolation,
+    logging-format-interpolation
 
 [FORMAT]
 max-line-length=120
@@ -24,3 +29,7 @@ const-rgx=(([A-Z_][A-Z0-9_]*)|(__.*__)|logger|api|_api)$
 [DESIGN]
 max-args=6
 ignored-argument-names=_.*|self
+
+[SIMILARITIES]
+# Minimum lines number of a similarity.
+min-similarity-lines=7
