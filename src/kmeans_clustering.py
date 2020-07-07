@@ -35,10 +35,10 @@ def raise_if_too_large(input_ds: rio.DatasetReader, max_size_bytes: int = 316218
     ) / 8
     # KMeansClustering algorithm uses at least x4 size of image in bytes in memory
     expected_size *= 4 * 4
-    logger.info("expected_size is %d" % expected_size)
+    logger.info(f"expected_size is {expected_size}")
 
     if expected_size > max_size_bytes:
-        logger.info("expected_size is more than %d" % max_size_bytes)
+        logger.info(f"expected_size is more than {max_size_bytes}")
         raise UP42Error(
             SupportedErrors.WRONG_INPUT_ERROR,
             "Dataset is too large! Please select a smaller AOI.",
