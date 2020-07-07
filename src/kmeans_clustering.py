@@ -16,22 +16,29 @@ from blockutils.exceptions import UP42Error, SupportedErrors
 logger = get_logger(__name__)
 
 
-def raise_if_too_large(input_ds: rio.DatasetReader, max_size_bytes: int = 2415919104):
-    # xlarge image has 20GB
-    # Using 18 GB as max in memory for safety as default - 2415919104 bytes
+def raise_if_too_large(input_ds: rio.DatasetReader, max_size_bytes: int = 31621877760):
+    # xlarge image has 31621877760 bytes memory
+    #
 
     if input_ds.meta["dtype"] == "uint8":
-        multiplier = 1.4
+        multiplier = 8
     elif input_ds.meta["dtype"] == "uint16":
-        multiplier = 2
-    elif input_ds.meta["dtype"] == "float":
-        multiplier = 4
+        multiplier = 16
+    elif input_ds.meta["dtype"] == "float32":
+        multiplier = 32
     else:
-        multiplier = 2
+        multiplier = 16
 
-    expected_size = input_ds.shape[0] * input_ds.shape[1] * input_ds.count * multiplier
+    # Calculate expected_size in bytes
+    expected_size = (
+        input_ds.shape[0] * input_ds.shape[1] * input_ds.count * multiplier
+    ) / 8
+    # KMeansClustering algorithm uses at least x4 size of image in bytes in memory
+    expected_size *= 4 * 4
+    logger.info("expected_size is %d" % expected_size)
 
     if expected_size > max_size_bytes:
+        logger.info("expected_size is more than %d" % max_size_bytes)
         raise UP42Error(
             SupportedErrors.WRONG_INPUT_ERROR,
             "Dataset is too large! Please select a smaller AOI.",
