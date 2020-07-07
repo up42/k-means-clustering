@@ -77,25 +77,31 @@ def test_raise_if_too_large():
         raise_if_too_large(instance)
 
         with pytest.raises(UP42Error, match=r".*[WRONG_INPUT_ERROR].*"):
-            instance.meta["dtype"] = "float"
+            instance.meta = {"dtype": "float32"}
             instance.count = 4
             instance.shape = (500000, 500000)
             raise_if_too_large(instance)
 
         with pytest.raises(UP42Error, match=r".*[WRONG_INPUT_ERROR].*"):
-            instance.meta["dtype"] = "uint8"
+            instance.meta = {"dtype": "uint8"}
             instance.count = 4
             instance.shape = (500000, 500000)
             raise_if_too_large(instance)
 
         with pytest.raises(UP42Error, match=r".*[WRONG_INPUT_ERROR].*"):
-            instance.meta["dtype"] = "uint16"
+            instance.meta = {"dtype": "uint16"}
             instance.count = 4
             instance.shape = (500000, 500000)
             raise_if_too_large(instance)
 
         with pytest.raises(UP42Error, match=r".*[WRONG_INPUT_ERROR].*"):
-            instance.meta["dtype"] = "uint8"
+            instance.meta = {"dtype": "uint8"}
             instance.count = 4
             instance.shape = (10, 10)
             raise_if_too_large(instance, 1)
+
+        with pytest.raises(UP42Error, match=r".*[WRONG_INPUT_ERROR].*"):
+            instance.meta = {"dtype": "float32"}
+            instance.count = 1
+            instance.shape = (28873, 22291)
+            raise_if_too_large(instance)
