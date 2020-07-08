@@ -17,8 +17,24 @@ logger = get_logger(__name__)
 
 
 def raise_if_too_large(input_ds: rio.DatasetReader, max_size_bytes: int = 31621877760):
-    # xlarge image has 31621877760 bytes memory
-    #
+    """Raises UP42Error if input dataset allocation in memory expected_size
+    max_size_bytes.
+
+    Xlarge machine has 31621877760 bytes memory
+
+    Parameters
+    ----------
+    input_ds : rio.DatasetReader
+        A raster dataset.
+    max_size_bytes : int
+        Maximum allowed size of dataset in bytes (usually memory in machine)
+
+    Raises
+    -------
+    UP42Error
+        When estimated input dataset allocation in memory exceedes max_size_bytes
+
+    """
 
     if input_ds.meta["dtype"] == "uint8":
         multiplier = 8
@@ -34,6 +50,7 @@ def raise_if_too_large(input_ds: rio.DatasetReader, max_size_bytes: int = 316218
         input_ds.shape[0] * input_ds.shape[1] * input_ds.count * multiplier
     ) / 8
     # KMeansClustering algorithm uses at least x4 size of image in bytes in memory
+    # Add x4 buffer for safety
     expected_size *= 4 * 4
     logger.info(f"expected_size is {expected_size}")
 
