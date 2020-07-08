@@ -11,8 +11,55 @@ from sklearn.cluster import KMeans
 
 from blockutils.logging import get_logger
 from blockutils.blocks import ProcessingBlock
+from blockutils.exceptions import UP42Error, SupportedErrors
 
 logger = get_logger(__name__)
+
+
+def raise_if_too_large(input_ds: rio.DatasetReader, max_size_bytes: int = 31621877760):
+    """Raises UP42Error if input dataset allocation in memory expected_size
+    max_size_bytes.
+
+    Xlarge machine has 31621877760 bytes memory
+
+    Parameters
+    ----------
+    input_ds : rio.DatasetReader
+        A raster dataset.
+    max_size_bytes : int
+        Maximum allowed size of dataset in bytes (usually memory in machine)
+
+    Raises
+    -------
+    UP42Error
+        When estimated input dataset allocation in memory exceedes max_size_bytes
+
+    """
+
+    if input_ds.meta["dtype"] == "uint8":
+        multiplier = 8
+    elif input_ds.meta["dtype"] == "uint16":
+        multiplier = 16
+    elif input_ds.meta["dtype"] == "float32":
+        multiplier = 32
+    else:
+        multiplier = 16
+
+    # Calculate expected_size in bytes
+    expected_size = (
+        input_ds.shape[0] * input_ds.shape[1] * input_ds.count * multiplier
+    ) / 8
+    # KMeansClustering algorithm uses at least x4 size of image in bytes in memory
+    # Add x4 buffer for safety
+    expected_size *= 4 * 4
+    logger.info(f"expected_size is {expected_size}")
+
+    if expected_size > max_size_bytes:
+        logger.info(f"expected_size {expected_size} is more than max_size_bytes {max_size_bytes}")
+        raise UP42Error(
+            SupportedErrors.WRONG_INPUT_ERROR,
+            "Dataset is too large! Please select a smaller AOI.",
+        )
 
 
 class KMeansClustering(ProcessingBlock):
@@ -77,6 +124,7 @@ class KMeansClustering(ProcessingBlock):
 
         # Read data from the geo tif file
         with rio.open(input_file_path, "r") as src:
+            raise_if_too_large(src)
             img_band_cnt = src.meta["count"]
             img_bands = []
             for i in range(img_band_cnt):
@@ -105,6 +153,9 @@ class KMeansClustering(ProcessingBlock):
         :param metadata: A GeoJSON FeatureCollection describing all input datasets
         :return: A GeoJSON FeatureCollection describing all output datasets
         """
+        if not input_fc.features:
+            raise UP42Error(SupportedErrors.NO_INPUT_ERROR)
+
         results = []  # type: List[Feature]
         for feature in input_fc.features:
             path_to_input_img = feature["properties"]["up42.data_path"]
@@ -112,9 +163,19 @@ class KMeansClustering(ProcessingBlock):
 
             out_feature = feature.copy()
             out_feature["properties"]["up42.data_path"] = path_to_output_img
-            results.append(out_feature)
 
-            self.run_kmeans_clustering(
-                "/tmp/input/" + path_to_input_img, "/tmp/output/" + path_to_output_img
-            )
+            try:
+                self.run_kmeans_clustering(
+                    "/tmp/input/" + path_to_input_img,
+                    "/tmp/output/" + path_to_output_img,
+                )
+                results.append(out_feature)
+            except UP42Error as e:
+                logger.warning(e)
+                logger.warning(
+                    "%s is too large to process, skipping...", path_to_input_img
+                )
+
+        if not results:
+            raise UP42Error(SupportedErrors.NO_OUTPUT_ERROR)
         return FeatureCollection(results)
