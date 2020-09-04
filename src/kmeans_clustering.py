@@ -55,7 +55,9 @@ def raise_if_too_large(input_ds: rio.DatasetReader, max_size_bytes: int = 316218
     logger.info(f"expected_size is {expected_size}")
 
     if expected_size > max_size_bytes:
-        logger.info(f"expected_size {expected_size} is more than max_size_bytes {max_size_bytes}")
+        logger.info(
+            f"expected_size {expected_size} is more than max_size_bytes {max_size_bytes}"
+        )
         raise UP42Error(
             SupportedErrors.WRONG_INPUT_ERROR,
             "Dataset is too large! Please select a smaller AOI.",
