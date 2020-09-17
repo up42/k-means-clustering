@@ -42,7 +42,7 @@ def test_process():
     lcc = KMeansClustering(n_clusters=5, n_iterations=5, n_sieve_pixels=1)
     with TestDirectoryContext(Path("/tmp")) as temp:
         image_path, _ = SyntheticImage(
-            100, 100, 4, "uint16", out_dir=temp / "input"
+            100, 100, 4, "uint16", out_dir=temp / "input", nodata=-1
         ).create(seed=100)
         input_fc = FeatureCollection(
             [
@@ -65,8 +65,6 @@ def test_process():
         )
         output_fc = lcc.process(input_fc)
         assert output_fc.features
-        with pytest.raises(UP42Error, match=r".*[NO_INPUT_ERROR].*"):
-            lcc.process(FeatureCollection([]))
 
 
 def test_process_float_with_nodata():

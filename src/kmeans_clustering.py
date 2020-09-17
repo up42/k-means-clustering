@@ -144,7 +144,7 @@ class KMeansClustering(ProcessingBlock):
             clusters_ar[img_bands[0] == src.meta["nodata"]] = nodata_val
         except KeyError:
             logger.warning(
-                "Propagation of nodata requested, but nodata value in input not set. Ignoring."
+                "Propagation of nodata attempted, but nodata value in input not set. Ignoring."
             )
 
         # Copy geo tif metadata to the output image and write it to a file
