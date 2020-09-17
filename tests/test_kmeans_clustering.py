@@ -70,9 +70,7 @@ def test_process():
 
 
 def test_process_float_with_nodata():
-    lcc = KMeansClustering(
-        n_clusters=5, n_iterations=5, n_sieve_pixels=1, propagate_nodata=True
-    )
+    lcc = KMeansClustering(n_clusters=5, n_iterations=5, n_sieve_pixels=1)
     with TestDirectoryContext(Path("/tmp")) as temp:
         image_path, _ = SyntheticImage(
             100, 100, 4, "float", out_dir=temp / "input", nodata=-9999.0, nodata_fill=5

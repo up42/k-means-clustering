@@ -70,11 +70,7 @@ class KMeansClustering(ProcessingBlock):
     """
 
     def __init__(
-        self,
-        n_clusters: int = 6,
-        n_iterations: int = 10,
-        n_sieve_pixels: int = 64,
-        propagate_nodata: bool = False,
+        self, n_clusters: int = 6, n_iterations: int = 10, n_sieve_pixels: int = 64,
     ):
         """
         It is possible to set all parameters for testing etc, but in a standard scenario
@@ -88,7 +84,6 @@ class KMeansClustering(ProcessingBlock):
         self.n_clusters = n_clusters
         self.n_iterations = n_iterations
         self.n_sieve_pixels = n_sieve_pixels
-        self.propagate_nodata = propagate_nodata
 
     def run_kmeans(self, img_ar: np.ndarray) -> np.ndarray:
         """
@@ -145,13 +140,12 @@ class KMeansClustering(ProcessingBlock):
         # Call clustering operation
         clusters_ar = self.run_kmeans(img_ar)
 
-        if self.propagate_nodata:
-            try:
-                clusters_ar[img_bands[0] == src.meta["nodata"]] = nodata_val
-            except KeyError:
-                logger.warning(
-                    "Propagation of nodata requested, but nodata value in input not set. Ignoring."
-                )
+        try:
+            clusters_ar[img_bands[0] == src.meta["nodata"]] = nodata_val
+        except KeyError:
+            logger.warning(
+                "Propagation of nodata requested, but nodata value in input not set. Ignoring."
+            )
 
         # Copy geo tif metadata to the output image and write it to a file
         dst_meta = src.meta.copy()

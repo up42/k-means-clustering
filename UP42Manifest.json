@@ -27,12 +27,6 @@
       "required": false,
       "description": "Minimum number of pixels in each patch for the classification",
       "default": 64
-    },
-    "propagate_nodata": {
-      "type":  "boolean",
-      "required": false,
-      "description": "Nodata pixels in input pixels are also set to nodata in output",
-      "default": false
     }
   },
   "machine": {
