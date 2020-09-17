@@ -70,7 +70,7 @@ class KMeansClustering(ProcessingBlock):
     """
 
     def __init__(
-        self, n_clusters: int = 6, n_iterations: int = 10, n_sieve_pixels: int = 64
+        self, n_clusters: int = 6, n_iterations: int = 10, n_sieve_pixels: int = 64,
     ):
         """
         It is possible to set all parameters for testing etc, but in a standard scenario
@@ -115,7 +115,9 @@ class KMeansClustering(ProcessingBlock):
 
         return cluster_indices
 
-    def run_kmeans_clustering(self, input_file_path: str, output_file_path: str):
+    def run_kmeans_clustering(
+        self, input_file_path: str, output_file_path: str, nodata_val: int = 255
+    ):
         """
         This method reads the input file, runs the K-means clustering on the raster data points and writes the results
         to the output file
@@ -138,10 +140,18 @@ class KMeansClustering(ProcessingBlock):
         # Call clustering operation
         clusters_ar = self.run_kmeans(img_ar)
 
+        try:
+            clusters_ar[img_bands[0] == src.meta["nodata"]] = nodata_val
+        except KeyError:
+            logger.warning(
+                "Propagation of nodata attempted, but nodata value in input not set. Ignoring."
+            )
+
         # Copy geo tif metadata to the output image and write it to a file
         dst_meta = src.meta.copy()
         dst_meta["count"] = 1
         dst_meta["dtype"] = "uint8"
+        dst_meta["nodata"] = nodata_val
         logger.info("dst_meta:")
         logger.info(dst_meta)
         with rio.open(output_file_path, "w", **dst_meta) as dst:
