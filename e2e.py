@@ -7,6 +7,10 @@ import os
 
 import geojson
 
+from blockutils.logging import get_logger
+
+logger = get_logger(__name__)
+
 if __name__ == "__main__":
     TESTNAME = "e2e_k-means_clustering"
     TEST_DIR = Path("/tmp") / TESTNAME
@@ -38,7 +42,7 @@ if __name__ == "__main__":
     with open(str(GEOJSON_PATH)) as f:
         FEATURE_COLLECTION = geojson.load(f)
 
-    print(FEATURE_COLLECTION.features[0].bbox)
+    logger.info(FEATURE_COLLECTION.features[0].bbox)
 
     OUTPUT = (
         TEST_DIR
@@ -46,6 +50,6 @@ if __name__ == "__main__":
         / Path(FEATURE_COLLECTION.features[0].properties["up42.data_path"])
     )
 
-    print(OUTPUT)
+    logger.info(OUTPUT)
 
     assert OUTPUT.exists()

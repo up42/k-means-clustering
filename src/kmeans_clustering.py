@@ -70,7 +70,10 @@ class KMeansClustering(ProcessingBlock):
     """
 
     def __init__(
-        self, n_clusters: int = 6, n_iterations: int = 10, n_sieve_pixels: int = 64,
+        self,
+        n_clusters: int = 6,
+        n_iterations: int = 10,
+        n_sieve_pixels: int = 64,
     ):
         """
         It is possible to set all parameters for testing etc, but in a standard scenario
@@ -185,7 +188,7 @@ class KMeansClustering(ProcessingBlock):
             except UP42Error as e:
                 logger.warning(e)
                 logger.warning(
-                    "%s is too large to process, skipping...", path_to_input_img
+                    f"{path_to_input_img} is too large to process, skipping..."
                 )
 
         if not results:
