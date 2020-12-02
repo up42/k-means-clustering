@@ -173,8 +173,14 @@ class KMeansClustering(ProcessingBlock):
 
         results = []  # type: List[Feature]
         for feature in input_fc.features:
-            path_to_input_img = feature["properties"]["up42.data_path"]
-            path_to_output_img = Path(path_to_input_img).stem + "_kmeans.tif"
+            try:
+                path_to_input_img = feature["properties"]["up42.data_path"]
+                path_to_output_img = Path(path_to_input_img).stem + "_kmeans.tif"
+            except KeyError as err:
+                raise UP42Error(
+                    SupportedErrors.NO_INPUT_ERROR,
+                    "up42.data_path was not specified in the metadata.",
+                ) from err
 
             out_feature = feature.copy()
             out_feature["properties"]["up42.data_path"] = path_to_output_img

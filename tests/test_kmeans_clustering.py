@@ -105,6 +105,36 @@ def test_process_float_with_nodata():
             assert np.all(band[:5, :5] == 255)
 
 
+def test_process_nodata_path():
+    lcc = KMeansClustering(n_clusters=5, n_iterations=5, n_sieve_pixels=1)
+    with TestDirectoryContext(Path("/tmp")) as temp:
+        image_path, _ = SyntheticImage(
+            100, 100, 4, "float", out_dir=temp / "input", nodata=-9999.0, nodata_fill=5
+        ).create(seed=100)
+        input_fc = FeatureCollection(
+            [
+                Feature(
+                    geometry={
+                        "type": "Polygon",
+                        "coordinates": [
+                            [
+                                [-8.89411926269531, 38.61687046392973],
+                                [-8.8604736328125, 38.61687046392973],
+                                [-8.8604736328125, 38.63939998171362],
+                                [-8.89411926269531, 38.63939998171362],
+                                [-8.89411926269531, 38.61687046392973],
+                            ]
+                        ],
+                    },
+                    properties={"up42.abc": str(image_path.name)},
+                )
+            ]
+        )
+
+        with pytest.raises(UP42Error, match=r".*[NO_INPUT_ERROR].*"):
+            lcc.process(input_fc)
+
+
 def test_raise_if_too_large():
     with mock.patch("rasterio.DatasetReader") as src:
         instance = src.return_value
