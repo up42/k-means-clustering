@@ -8,7 +8,7 @@
     "machine learning"
   ],
   "display_name": "K-means Clustering",
-  "description": "This block takes an AOI clipped image and runs a simple classification procedure.\nThe classification is a simple unsupervised K-means clustering in the color space of the image.\nThe number of clusters and other parameters can be specified for the classification.",
+  "description": "Runs a simple unsupervised K-means clustering algorithm for classification.",
   "parameters": {
     "n_clusters": {
       "type": "number",
