@@ -7,9 +7,9 @@ import pytest
 
 from geojson import FeatureCollection, Feature
 import rasterio as rio
+from fake_geo_images.fakegeoimages import FakeGeoImage
 
 from blockutils.common import ensure_data_directories_exist, TestDirectoryContext
-from blockutils.syntheticimage import SyntheticImage
 from blockutils.exceptions import UP42Error
 
 from context import KMeansClustering, raise_if_too_large
@@ -41,7 +41,7 @@ def test_kmeans_clustering():
 def test_process():
     lcc = KMeansClustering(n_clusters=5, n_iterations=5, n_sieve_pixels=1)
     with TestDirectoryContext(Path("/tmp")) as temp:
-        image_path, _ = SyntheticImage(
+        image_path, _ = FakeGeoImage(
             100, 100, 4, "uint16", out_dir=temp / "input", nodata=-1
         ).create(seed=100)
         input_fc = FeatureCollection(
@@ -70,7 +70,7 @@ def test_process():
 def test_process_float_with_nodata():
     lcc = KMeansClustering(n_clusters=5, n_iterations=5, n_sieve_pixels=1)
     with TestDirectoryContext(Path("/tmp")) as temp:
-        image_path, _ = SyntheticImage(
+        image_path, _ = FakeGeoImage(
             100, 100, 4, "float", out_dir=temp / "input", nodata=-9999.0, nodata_fill=5
         ).create(seed=100)
         input_fc = FeatureCollection(
@@ -108,7 +108,7 @@ def test_process_float_with_nodata():
 def test_process_nodata_path():
     lcc = KMeansClustering(n_clusters=5, n_iterations=5, n_sieve_pixels=1)
     with TestDirectoryContext(Path("/tmp")) as temp:
-        image_path, _ = SyntheticImage(
+        image_path, _ = FakeGeoImage(
             100, 100, 4, "float", out_dir=temp / "input", nodata=-9999.0, nodata_fill=5
         ).create(seed=100)
         input_fc = FeatureCollection(
